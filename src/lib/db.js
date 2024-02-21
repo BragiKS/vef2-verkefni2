@@ -1,14 +1,19 @@
 import pg from 'pg';
+import { readFile } from 'fs/promises'; 
 import { environment } from './environment.js';
 import { logger } from './logger.js';
 
 const env = environment(process.env, logger);
+
+const SCHEMA_FILE = './src/sql/schema.sql';
+const DROP_SCHEMA_FILE = './src/sql/drop.sql';
 
 if (!env?.connectionString) {
   process.exit(-1);
 }
 
 const { connectionString } = env;
+console.log(connectionString);
 
 const pool = new pg.Pool({ connectionString });
 
@@ -75,6 +80,18 @@ export async function getGames() {
     
   }
   return games;
+}
+
+export async function createSchema(schemaFile = SCHEMA_FILE) {
+  const data = await readFile(schemaFile);
+
+  return query(data.toString('utf-8'));
+}
+
+export async function dropSchema(dropFile = DROP_SCHEMA_FILE) {
+  const data = await readFile(dropFile);
+
+  return query(data.toString('utf-8'));
 }
 
 export function insertGame(home_name, home_score, away_name, away_score) {
