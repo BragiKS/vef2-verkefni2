@@ -13,7 +13,6 @@ if (!env?.connectionString) {
 }
 
 const { connectionString } = env;
-console.log(connectionString);
 
 const pool = new pg.Pool({ connectionString });
 
@@ -80,6 +79,45 @@ export async function getGames() {
     
   }
   return games;
+}
+
+export async function getUsers() {
+  const q = `
+    SELECT * FROM
+    users
+  `;
+
+  const result = await query(q);
+  const users = []
+  if (result && (result.rows?.length ?? 0) > 0) {
+    for (const row of result.rows) {
+      const user = {
+        id: row.id,
+        username: row.username,
+        name: row.name,
+        password: row.password,
+        admin: row.admin
+      };
+      users.push(user);
+    };
+  };
+
+  return users;
+}
+
+export async function deleteGame(id) {
+  const q = `
+    DELETE FROM games
+    WHERE id = $1
+  `;
+  try {
+    const result = await query(q, [id])
+    console.info(`Game with ID ${id} deleted`)
+    return result;
+  } catch (e) {
+    console.error('Error deleting game', e.message);
+    throw e;
+  }
 }
 
 export async function createSchema(schemaFile = SCHEMA_FILE) {

@@ -1,4 +1,5 @@
-INSERT INTO users (username, password) VALUES ('admin', '$2a$11$pgj3.zySyFOvIQEpD7W6Aund1Tw.BFarXxgLJxLbrzIv/4Nteisii');
+INSERT INTO users (username, name, password, admin) VALUES ('admin', 'Administrator', '$2a$11$pgj3.zySyFOvIQEpD7W6Aund1Tw.BFarXxgLJxLbrzIv/4Nteisii', true);
+INSERT INTO users (username, name, password) VALUES ('bragi', 'Bragi K.', '$2a$11$pgj3.zySyFOvIQEpD7W6Aund1Tw.BFarXxgLJxLbrzIv/4Nteisii');
 
 INSERT INTO teams (name) VALUES ('Boltaliðið');
 INSERT INTO teams (name) VALUES ('Dripplararnir');

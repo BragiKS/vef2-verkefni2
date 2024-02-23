@@ -1,5 +1,32 @@
 <%- include('header') -%>
 
-admin!
+<h1>Admin Page - Manage Games</h1>
+
+<table>
+    <tr>
+        <th>Heima lið</th>
+        <th>Heima lið skor</th>
+        <th>Útilið</th>
+        <th>Útilið skor</th>
+        <th>Actions</th>
+    </tr>
+    <% for (const game of locals.games) { %>
+        <tr>
+            <td><%= game.home.name %></td>
+            <td><%= game.home.score %></td>
+            <td><%= game.away.name %></td>
+            <td><%= game.away.score %></td>
+            <td>
+                <form action="/admin/delete/<%= game.id %>" method="POST" class="events__eventDelete">
+                    <button class="button button--small events__eventDeleteButton">Delete</button>
+                </form>
+            </td>
+        </tr>
+    <% } %>
+</table>
+
+<form method="post" action="/logout">
+    <button>LOGOUT</button>
+</form>
 
 <%- include('footer') -%>

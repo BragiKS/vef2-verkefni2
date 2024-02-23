@@ -6,4 +6,8 @@
   <button>Innskrá</button>
 </form>
 
+<% if (locals.message) { %>
+  <p><%= locals.message %></p>
+<% } %>
+
 <%- include('footer') -%>
