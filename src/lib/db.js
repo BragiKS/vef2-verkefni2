@@ -12,9 +12,14 @@ if (!env?.connectionString) {
   process.exit(-1);
 }
 
-const { connectionString } = env;
+//const { connectionString } = env;
 
-const pool = new pg.Pool({ connectionString });
+const pool = new pg.Pool({
+  connectionString: env.connectionString,
+  ssl: {
+    rejectUnauthorized: false, // Set to false for development or trusted server environments
+  },
+});
 
 pool.on('error', (err) => {
   console.error('Villa í tengingu við gagnagrunn, forrit hættir', err);
