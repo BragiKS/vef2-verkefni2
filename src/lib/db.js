@@ -1,5 +1,5 @@
 import pg from 'pg';
-import { readFile } from 'fs/promises'; 
+import { readFile } from 'fs/promises';
 import { environment } from './environment.js';
 import { logger } from './logger.js';
 
@@ -96,7 +96,6 @@ export async function getGames() {
       };
       games.push(game);
     }
-    
   }
   return games;
 }
@@ -108,7 +107,7 @@ export async function getUsers() {
   `;
 
   const result = await query(q);
-  const users = []
+  const users = [];
   if (result && (result.rows?.length ?? 0) > 0) {
     for (const row of result.rows) {
       const user = {
@@ -116,11 +115,11 @@ export async function getUsers() {
         username: row.username,
         name: row.name,
         password: row.password,
-        admin: row.admin
+        admin: row.admin,
       };
       users.push(user);
-    };
-  };
+    }
+  }
 
   return users;
 }
@@ -131,8 +130,8 @@ export async function deleteGame(id) {
     WHERE id = $1
   `;
   try {
-    const result = await query(q, [id])
-    console.info(`Game with ID ${id} deleted`)
+    const result = await query(q, [id]);
+    console.info(`Game with ID ${id} deleted`);
     return result;
   } catch (e) {
     console.error('Error deleting game', e.message);
@@ -152,11 +151,12 @@ export async function dropSchema(dropFile = DROP_SCHEMA_FILE) {
   return query(data.toString('utf-8'));
 }
 
-export function insertGame(home_name, home_score, away_name, away_score) {
+export function insertGame(date, home, away, home_score, away_score) {
   const q =
-    'insert into games (home, away, home_score, away_score) values ($1, $2, $3, $4);';
+    'insert into games (date, home, away, home_score, away_score) values ($1, $2, $3, $4, $5);';
 
-  const result = query(q, [home_name, home_score, away_name, away_score]);
+  const result = query(q, [date, home, away, home_score, away_score]);
+  return result;
 }
 
 export async function end() {

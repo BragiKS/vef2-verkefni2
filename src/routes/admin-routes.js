@@ -2,10 +2,11 @@ import express from 'express';
 import passport from 'passport';
 import { logger } from '../lib/logger.js';
 import { getGames, insertGame, deleteGame, getTeams } from '../lib/db.js';
-import { xssSanitizationMiddleware, 
-          createGameValidationMiddleware, 
-          sanitizationMiddleware, 
-        } from '../lib/validation.js';
+import {
+  xssSanitizationMiddleware,
+  createGameValidationMiddleware,
+  sanitizationMiddleware,
+} from '../lib/validation.js';
 
 export const adminRouter = express.Router();
 
@@ -22,7 +23,6 @@ async function loginRoute(req, res) {
 }
 
 async function adminRoute(req, res) {
-
   return res.render('admin', {
     title: 'Stjórnborð',
     games: await getGames(),
@@ -51,17 +51,14 @@ function skraRoute(req, res, next) {
 }
 
 function skraRouteInsert(req, res, next) {
-  // TODO mjög hrátt allt saman, vantar validation!
-  const { home_name, home_score, away_name, away_score } = req.body;
+  const { date, home, away, home_score, away_score } = req.body;
 
-
-  const result = insertGame(home_name, home_score, away_name, away_score);
+  const result = insertGame(date, home, away, home_score, away_score);
 
   res.redirect('/admin');
 }
 
 async function deleteRoute(req, res, next) {
-  
   const result = await deleteGame(req.params.id);
 
   if (result) {
@@ -82,11 +79,7 @@ adminRouter.post(
   skraRouteInsert,
 );
 
-adminRouter.post(
-  '/admin/delete/:id',
-  ensureLoggedIn,
-  deleteRoute,
-);
+adminRouter.post('/admin/delete/:id', ensureLoggedIn, deleteRoute);
 
 adminRouter.post(
   '/login',
@@ -102,7 +95,7 @@ adminRouter.post(
     if (req.user?.admin) {
       res.redirect('/admin');
     } else {
-      res.redirect('/')
+      res.redirect('/');
     }
   },
 );

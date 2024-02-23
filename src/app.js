@@ -7,7 +7,6 @@ import { fileURLToPath } from 'url';
 import { environment } from './lib/environment.js';
 import { handler404, handlerError } from './lib/handlers.js';
 import { logger } from './lib/logger.js';
-import { deleteGame } from './lib/db.js';
 import { adminRouter } from './routes/admin-routes.js';
 import { indexRouter } from './routes/index-routes.js';
 

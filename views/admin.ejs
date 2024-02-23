@@ -2,7 +2,7 @@
 
 <h1>Admin Page - Manage Games</h1>
 
-<form method="post" action="/admin" autocomplete="off" class="form">
+<form method="post" action="/admin/skra" autocomplete="off" class="form">
     <div class="log-game date">
       <label for="game-date">Dagsetning</label>
       <input type="date" id="date" name="date">
@@ -11,25 +11,29 @@
       <label for="home">Heima lið</label>
       <select id="home" name="home" >
         <option value="" disabled selected>Veldu lið</option>
-      <%locals.teams.forEach(function(team) { %>
+      <% locals.teams.forEach(function(team) { %>
         <option value="<%= team.id %>"><%= team.name %> </option>
-      <%}); %>
+      <% }); %>
       </select>
       <label for="home_score">Heima skor</label>
       <input type="text" id="home_score" name="home_score" placeholder="Skráðu fjölda marka">
       <label for="away">Úti lið</label>
       <select id="away" name="away">
         <option value="" disabled selected>Veldu lið</option>
-      <%locals.teams.forEach(function(team) { %>
+      <% locals.teams.forEach(function(team) { %>
           <option value="<%= team.id %>"> <%= team.name %> </option>
-      <%}); %>
+      <% }); %>
       </select>
       <label for="away_score">Úti lið skor</label>
       <input type="text" id="away_score" name="away_score" placeholder="Skráðu fjölda marka">
     </div>
+    <button type="submit" class="subButton">Bæta við</button>
+</form>
+
 
 <table>
     <tr>
+        <th>Dagsetning</th>
         <th>Heima lið</th>
         <th>Heima lið skor</th>
         <th>Útilið</th>
@@ -38,7 +42,7 @@
     </tr>
     <% for (const game of locals.games) { %>
         <tr>
-            <td><%= game.id %></td>
+            <td><%= game.date %></td>
             <td><%= game.home.name %></td>
             <td><%= game.home.score %></td>
             <td><%= game.away.name %></td>
