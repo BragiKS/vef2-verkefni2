@@ -1,6 +1,11 @@
 import express from 'express';
 import passport from 'passport';
-import { getGames, insertGame, deleteGame } from '../lib/db.js';
+import { logger } from '../lib/logger.js';
+import { getGames, insertGame, deleteGame, getTeams } from '../lib/db.js';
+import { xssSanitizationMiddleware, 
+          createGameValidationMiddleware, 
+          sanitizationMiddleware, 
+        } from '../lib/validation.js';
 
 export const adminRouter = express.Router();
 
@@ -21,6 +26,7 @@ async function adminRoute(req, res) {
   return res.render('admin', {
     title: 'Stjórnborð',
     games: await getGames(),
+    teams: await getTeams(),
     loggedIn: req.isAuthenticated(),
     user: req.user ?? null,
     time: new Date().toISOString(),
@@ -48,15 +54,15 @@ function skraRouteInsert(req, res, next) {
   // TODO mjög hrátt allt saman, vantar validation!
   const { home_name, home_score, away_name, away_score } = req.body;
 
+
   const result = insertGame(home_name, home_score, away_name, away_score);
 
-  res.redirect('/leikir');
+  res.redirect('/admin');
 }
 
 async function deleteRoute(req, res, next) {
-  const { id } = req.params;
-
-  const result = await deleteGame(id);
+  
+  const result = await deleteGame(req.params.id);
 
   if (result) {
     return res.redirect('/admin');
@@ -67,13 +73,19 @@ async function deleteRoute(req, res, next) {
 
 adminRouter.get('/login', loginRoute);
 adminRouter.get('/admin', ensureLoggedIn, adminRoute);
-adminRouter.get('/skra', skraRoute);
-adminRouter.post('/skra', skraRouteInsert);
+adminRouter.post(
+  '/admin/skra',
+  ensureLoggedIn,
+  createGameValidationMiddleware(),
+  xssSanitizationMiddleware(),
+  sanitizationMiddleware(),
+  skraRouteInsert,
+);
 
 adminRouter.post(
   '/admin/delete/:id',
   ensureLoggedIn,
-  deleteRoute
+  deleteRoute,
 );
 
 adminRouter.post(
@@ -95,7 +107,8 @@ adminRouter.post(
   },
 );
 
-adminRouter.get('/logout', (req, res) => {
+adminRouter.get('/logout', async (req, res) => {
+  // logout hendir session cookie og session
   req.logout((e) => {
     if (e) {
       logger.error('error logging out', e);
@@ -105,5 +118,5 @@ adminRouter.get('/logout', (req, res) => {
       });
     }
     return res.redirect('/');
-  })
-})
+  });
+});

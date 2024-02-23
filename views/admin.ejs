@@ -2,6 +2,32 @@
 
 <h1>Admin Page - Manage Games</h1>
 
+<form method="post" action="/admin" autocomplete="off" class="form">
+    <div class="log-game date">
+      <label for="game-date">Dagsetning</label>
+      <input type="date" id="date" name="date">
+    </div>
+    <div class="log-game">
+      <label for="home">Heima lið</label>
+      <select id="home" name="home" >
+        <option value="" disabled selected>Veldu lið</option>
+      <%locals.teams.forEach(function(team) { %>
+        <option value="<%= team.id %>"><%= team.name %> </option>
+      <%}); %>
+      </select>
+      <label for="home_score">Heima skor</label>
+      <input type="text" id="home_score" name="home_score" placeholder="Skráðu fjölda marka">
+      <label for="away">Úti lið</label>
+      <select id="away" name="away">
+        <option value="" disabled selected>Veldu lið</option>
+      <%locals.teams.forEach(function(team) { %>
+          <option value="<%= team.id %>"> <%= team.name %> </option>
+      <%}); %>
+      </select>
+      <label for="away_score">Úti lið skor</label>
+      <input type="text" id="away_score" name="away_score" placeholder="Skráðu fjölda marka">
+    </div>
+
 <table>
     <tr>
         <th>Heima lið</th>
@@ -12,21 +38,18 @@
     </tr>
     <% for (const game of locals.games) { %>
         <tr>
+            <td><%= game.id %></td>
             <td><%= game.home.name %></td>
             <td><%= game.home.score %></td>
             <td><%= game.away.name %></td>
             <td><%= game.away.score %></td>
             <td>
-                <form action="/admin/delete/<%= game.id %>" method="POST" class="events__eventDelete">
-                    <button class="button button--small events__eventDeleteButton">Delete</button>
-                </form>
+                <form action="/admin/delete/<%= game.id %>" method="POST">
+                    <button type="submit" class="delButton">Delete</button>
+                </form>                
             </td>
         </tr>
     <% } %>
 </table>
-
-<form method="post" action="/logout">
-    <button>LOGOUT</button>
-</form>
 
 <%- include('footer') -%>

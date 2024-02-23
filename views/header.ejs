@@ -14,6 +14,9 @@
 
     <% if (locals.loggedIn) { %>
       <p>Innskráður notandi: <%= locals.user.name %> (<%= locals.user.username %>)
+      <form method="get" action="/logout">
+        <button>LOGOUT</button>
+      </form>
     <% } else { %>
       <p><a href="/admin">Innskrá</a></p>
     <% } %>

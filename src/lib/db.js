@@ -42,9 +42,28 @@ export async function query(q, values = []) {
   }
 }
 
+export async function getTeams() {
+  const q = `
+  SELECT * FROM teams
+  `;
+  const result = await query(q);
+
+  const teams = [];
+  if (result && (result.rows?.length ?? 0) > 0) {
+    for (const row of result.rows) {
+      const team = { id: row.id, name: row.name };
+      teams.push(team);
+    }
+    return teams;
+  }
+  console.error('Failed to fetch teams');
+  return [];
+}
+
 export async function getGames() {
   const q = `
     SELECT
+      games.id,
       date,
       home_team.name AS home_name,
       home_score,
@@ -64,6 +83,7 @@ export async function getGames() {
   if (result && (result.rows?.length ?? 0) > 0) {
     for (const row of result.rows) {
       const game = {
+        id: row.id,
         date: row.date,
         home: {
           name: row.home_name,
